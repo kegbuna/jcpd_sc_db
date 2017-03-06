@@ -40,6 +40,7 @@ class CSVReader {
       auto_parse: true,
       auto_parse_date: true,
       // setting columns manually because the library is counting an empty column in the header
+      // TODO:: Figure out why empty header is being parsed from records and restore dynamic column generation
       columns: [
         "event_number",
         "district",
@@ -64,7 +65,6 @@ class CSVReader {
       relax_column_count: true
     });
 
-    parser.write(file);
 
     parser.on('readable', () => {
       let data;
@@ -77,6 +77,8 @@ class CSVReader {
     parser.on('error', err => {
       console.error(err);
     });
+
+    parser.write(file);
 
     return recordSubject;
   }
