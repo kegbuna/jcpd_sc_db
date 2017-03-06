@@ -9,15 +9,15 @@ class CSVReader {
 
   /**
    * Creates instanceof CSVReader
-   * @param {string} [path] - A default path
+   * @param {object} [config] - A default path
    */
-  constructor(path) {
-    if (path) {
-      if (typeof  path !== 'string') {
+  constructor(config) {
+    if (config && config.path) {
+      if (typeof config.path !== 'string') {
         throw new Error('Path needs to be a string');
       }
 
-      this.defaultPath = path;
+      this.defaultPath = config.path;
     }
   }
 
