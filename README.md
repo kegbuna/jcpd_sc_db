@@ -48,7 +48,8 @@ This will enable the main file to provide the DBWriter class with configuration
 In the `config` directory, place a file named `reader.json`. Example: 
 ```json
     {
-      "csvPath": "./migrator/data/jcpd_calls.csv"
+      "csvPath": "./migrator/data/jcpd_calls.csv",
+      "fileEncoding": "utf8"
     }
 ```
 The `csvPath` should point to the location of the exported CSV file

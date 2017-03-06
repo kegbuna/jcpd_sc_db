@@ -12,8 +12,9 @@ class CSVReader {
    * @param {object} [config] - A default path
    */
   constructor(config) {
+    this.config = config || {};
     if (config && config.csvPath) {
-      if (typeof config.csvPath!== 'string') {
+      if (typeof config.csvPath !== 'string') {
         throw new Error('Path needs to be a string');
       }
 
@@ -32,52 +33,52 @@ class CSVReader {
     }
     const recordSubject = new Rx.ReplaySubject();
     const filePath = path || this.defaultPath;
-    const file = fs.readFileSync(filePath, 'ascii');
+    const file = fs.readFileSync(filePath, this.config.fileEncoding || 'utf8');
 
-      const records = [];
-      const parser = csv.parse({
-        auto_parse: true,
-        auto_parse_date: true,
-        // setting columns manually because the library is counting an empty column in the header
-        columns: [
-          "event_number",
-          "district",
-          "time_received",
-          "shift",
-          "time_dispatched",
-          "time_arrived",
-          "callcode",
-          "call_code_description",
-          "call_type",
-          "priority",
-          "unit_id",
-          "is_primary",
-          "address",
-          "city",
-          "latitude",
-          "longitude",
-          "geo_count",
-          "geo_error"
-        ],
-        from: 2,
-        relax_column_count: true
-      });
+    const records = [];
+    const parser = csv.parse({
+      auto_parse: true,
+      auto_parse_date: true,
+      // setting columns manually because the library is counting an empty column in the header
+      columns: [
+        "event_number",
+        "district",
+        "time_received",
+        "shift",
+        "time_dispatched",
+        "time_arrived",
+        "callcode",
+        "call_code_description",
+        "call_type",
+        "priority",
+        "unit_id",
+        "is_primary",
+        "address",
+        "city",
+        "latitude",
+        "longitude",
+        "geo_count",
+        "geo_error"
+      ],
+      from: 2,
+      relax_column_count: true
+    });
 
-      parser.write(file);
+    parser.write(file);
 
-      parser.on('readable', () => {
-        let data;
-        while (data = parser.read()) {
-          records.push(data);
-          recordSubject.next(data);
-        }
-      });
+    parser.on('readable', () => {
+      let data;
+      while (data = parser.read()) {
+        records.push(data);
+        recordSubject.next(data);
+      }
+    });
 
-      parser.on('error', err => {
-        console.error(err);
-      });
+    parser.on('error', err => {
+      console.error(err);
+    });
 
-      return recordSubject;
+    return recordSubject;
   }
 }
 
