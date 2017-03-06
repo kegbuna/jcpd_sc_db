@@ -17,12 +17,14 @@ class DBWriter {
 
   /**
    * Writes a record to the database
-   * @param {string} table - Table name
-   * @param {Sequelize.Model} schema - The schema of the record
+   * @param {object} recordConfig - An object containing values used to populate db
+   * @param {string} recordConfig.tableName - the name of the table to populate
+   * @param {Sequelize.Model} recordConfig.model - The schema
+   * @param {object} recordConfig.config = sequelize configuration data
    * @param {object} record - The record to be inserted
    */
-  writeRecord(table, schema, record) {
-    const newRecord = this.sequelize.define(table, schema);
+  writeRecord(recordConfig, record) {
+    const newRecord = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
 
     this.sequelize.sync().then(() => {
       newRecord.create(record)

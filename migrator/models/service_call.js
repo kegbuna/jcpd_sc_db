@@ -1,6 +1,14 @@
 const Sequelize = require('sequelize');
 
-const serviceCall = {
+const tableName = 'service_calls';
+
+const config = {
+  timestamps: true,
+  createdAt: 'created',
+  updatedAt: 'updated'
+};
+
+const model = {
   "event_number": Sequelize.STRING,
   "district": Sequelize.STRING,
   "time_received": Sequelize.DATE,
@@ -21,4 +29,4 @@ const serviceCall = {
   "geo_error": Sequelize.STRING
 };
 
-module.exports = serviceCall;
+module.exports = {tableName, config, model};

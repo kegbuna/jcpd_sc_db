@@ -6,9 +6,8 @@ const readerConfig = require('./config/reader.json');
 const csvReader = new CSVReader(readerConfig);
 const dbWriter = new DBWriter(dbConfig);
 
-const table = 'service_calls';
-const tableSchema = require('./models/service_call');
+const serviceCallDBConfig = require('./models/service_call');
 
 csvReader.getRecords().subscribe((record) => {
-  dbWriter.writeRecord(table, tableSchema, record);
+  dbWriter.writeRecord(serviceCallDBConfig, record);
 });
