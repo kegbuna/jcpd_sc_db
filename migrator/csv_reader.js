@@ -12,12 +12,12 @@ class CSVReader {
    * @param {object} [config] - A default path
    */
   constructor(config) {
-    if (config && config.path) {
-      if (typeof config.path !== 'string') {
+    if (config && config.csvPath) {
+      if (typeof config.csvPath!== 'string') {
         throw new Error('Path needs to be a string');
       }
 
-      this.defaultPath = config.path;
+      this.defaultPath = config.csvPath;
     }
   }
 
@@ -71,6 +71,10 @@ class CSVReader {
           records.push(data);
           recordSubject.next(data);
         }
+      });
+
+      parser.on('error', err => {
+        console.error(err);
       });
 
       return recordSubject;
