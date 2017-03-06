@@ -1,0 +1,10 @@
+# dependencies
+node_modules
+
+# ignore any data but the gitkeep file
+migrator/data/*
+!migrator/data/.gitkeep
+
+# ignore any configs
+migrator/config/*
+!migrator/config/.gitkeep
