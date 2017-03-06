@@ -31,11 +31,9 @@ class CSVReader {
     if (!path && !this.defaultPath) {
       throw new Error('no path provided and no default set');
     }
-    const recordSubject = new Rx.ReplaySubject();
+    const recordSubject = new Rx.Subject();
     const filePath = path || this.defaultPath;
-    const file = fs.readFileSync(filePath, this.config.fileEncoding || 'utf8');
 
-    const records = [];
     const parser = csv.parse({
       auto_parse: true,
       auto_parse_date: true,
@@ -69,7 +67,6 @@ class CSVReader {
     parser.on('readable', () => {
       let data;
       while (data = parser.read()) {
-        records.push(data);
         recordSubject.next(data);
       }
     });
@@ -78,7 +75,12 @@ class CSVReader {
       console.error(err);
     });
 
-    parser.write(file);
+
+    const file = fs.createReadStream(filePath, this.config.fileEncoding || 'utf8');
+
+    file.on('data', (chunk) => {
+      parser.write(chunk);
+    });
 
     return recordSubject;
   }

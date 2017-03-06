@@ -13,6 +13,10 @@ class DBWriter {
       host: dbConfig.host,
       dialect: dbConfig.dialect
     });
+
+    this.sequelize.sync().then(() => {
+      console.info('DB Connection initialized');
+    });
   }
 
   /**
@@ -26,14 +30,12 @@ class DBWriter {
   writeRecord(recordConfig, record) {
     const newRecord = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
 
-    this.sequelize.sync().then(() => {
-      newRecord.create(record)
-        .then((submitted) => {
-          console.log(submitted);
-        });
-    }, err => {
-      console.error(err);
-    });
+    newRecord.create(record)
+      .then((submitted) => {
+        console.info(`Submitted new record for event number: ${record.event_number}`);
+      }, err => {
+        console.error(err);
+      });
   }
 }
 
