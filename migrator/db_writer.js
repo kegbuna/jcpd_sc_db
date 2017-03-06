@@ -1,5 +1,8 @@
 const Sequelize = require('sequelize');
 
+/**
+ * Responsible for writing new records to the database
+ */
 class DBWriter {
   constructor(dbConfig) {
     if (!dbConfig) {
