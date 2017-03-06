@@ -37,7 +37,7 @@ In the `config` directory, place a file named `db.json`. Example:
     {
       "host": "localhost",
       "dialect": "postgres",
-      "database": "public",
+      "database": "postgres",
       "port": 5432,
       "user": "postgres",
       "password": "<password>"
