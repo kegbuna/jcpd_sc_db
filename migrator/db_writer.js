@@ -31,16 +31,41 @@ class DBWriter {
    * @param {object} record - The record to be inserted
    */
   writeRecord(recordConfig, record) {
-    if (!this.modelCache[recordConfig.tableName]) {
-      this.modelCache[recordConfig.tableName] = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
-    }
-
-    this.modelCache[recordConfig.tableName].create(record)
+    this.getOrAddTable(recordConfig).create(record)
       .then((submitted) => {
         console.info(`Submitted new record for event number: ${record.event_number}`);
       }, err => {
         console.error(err);
       });
+  }
+
+  /**
+   * Writes multiple records to the database
+   * @param {object} recordConfig - An object containing values used to populate db
+   * @param {string} recordConfig.tableName - the name of the table to populate
+   * @param {Sequelize.Model} recordConfig.model - The schema
+   * @param {object} recordConfig.config = sequelize configuration data
+   * @param {Object[]} records - a collection of records to create
+   */
+  writeRecords(recordConfig, records) {
+    this.getOrAddTable(recordConfig).bulkCreate(records)
+      .then((submitted) => {
+        console.info(`Submitted new record for event number: ${record.event_number}`);
+      }, err => {
+        console.error(err);
+      });
+  }
+
+  /**
+   * Checks memory for an already defined model and adds it if it's missing
+   * @param {object} recordConfig - A record configuration object
+   * @returns {Sequelize.Model}
+   */
+  private getOrAddTable(recordConfig) {
+    if (!this.modelCache[recordConfig.tableName]) {
+      this.modelCache[recordConfig.tableName] = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
+    }
+    return this.modelCache[recordConfig.tableName];
   }
 }
 
