@@ -36,9 +36,9 @@ class CSVReader {
 
     const parser = csv.parse({
       auto_parse: true,
-      auto_parse_date: true,
       // setting columns manually because the library is counting an empty column in the header
       // TODO:: Figure out why empty header is being parsed from records and restore dynamic column generation
+      // Consider usage of 'columns' callback to clean the first row results
       columns: [
         "event_number",
         "district",

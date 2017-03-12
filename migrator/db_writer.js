@@ -14,6 +14,9 @@ class DBWriter {
       dialect: dbConfig.dialect
     });
 
+    //collection of sequel models
+    this.modelCache = {};
+
     this.sequelize.sync().then(() => {
       console.info('DB Connection initialized');
     });
@@ -28,9 +31,11 @@ class DBWriter {
    * @param {object} record - The record to be inserted
    */
   writeRecord(recordConfig, record) {
-    const newRecord = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
+    if (!this.modelCache[recordConfig.tableName]) {
+      this.modelCache[recordConfig.tableName] = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
+    }
 
-    newRecord.create(record)
+    this.modelCache[recordConfig.tableName].create(record)
       .then((submitted) => {
         console.info(`Submitted new record for event number: ${record.event_number}`);
       }, err => {
