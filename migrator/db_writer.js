@@ -31,7 +31,7 @@ class DBWriter {
    * @param {object} record - The record to be inserted
    */
   writeRecord(recordConfig, record) {
-    this.getOrAddTable(recordConfig).create(record)
+    this.getOrAddModel(recordConfig).create(record)
       .then((submitted) => {
         console.info(`Submitted new record for event number: ${record.event_number}`);
       }, err => {
@@ -48,9 +48,9 @@ class DBWriter {
    * @param {Object[]} records - a collection of records to create
    */
   writeRecords(recordConfig, records) {
-    this.getOrAddTable(recordConfig).bulkCreate(records)
+    this.getOrAddModel(recordConfig).bulkCreate(records)
       .then((submitted) => {
-        console.info(`Submitted new record for event number: ${record.event_number}`);
+        console.info(`Successfully added ${records.length} records.`);
       }, err => {
         console.error(err);
       });
@@ -60,8 +60,9 @@ class DBWriter {
    * Checks memory for an already defined model and adds it if it's missing
    * @param {object} recordConfig - A record configuration object
    * @returns {Sequelize.Model}
+   * @private
    */
-  private getOrAddTable(recordConfig) {
+  getOrAddModel(recordConfig) {
     if (!this.modelCache[recordConfig.tableName]) {
       this.modelCache[recordConfig.tableName] = this.sequelize.define(recordConfig.tableName, recordConfig.model, recordConfig.config);
     }

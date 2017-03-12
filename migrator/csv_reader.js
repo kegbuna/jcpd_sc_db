@@ -9,30 +9,25 @@ class CSVReader {
 
   /**
    * Creates instanceof CSVReader
-   * @param {object} [config] - A default path
+   * @param {object} config - A config object
+   * @param {string} config.csvPath - The path to the csv file
+   * @param {string} config.chunkSize - max number of records to return at a time
    */
   constructor(config) {
     this.config = config || {};
-    if (config && config.csvPath) {
-      if (typeof config.csvPath !== 'string') {
-        throw new Error('Path needs to be a string');
-      }
-
-      this.defaultPath = config.csvPath;
+    if (!config.csvPath) {
+        throw new Error('Need a value for csvPath');
     }
   }
 
   /**
    * Reads in a file and returns a dictionary with the results
-   * @param {string} [path] - Tell us where to look. If this instance was constructed with a path, no need to provide another.
    * @returns {ReplaySubject<object>} An observable with the results of the file reading
    */
-  getRecords(path) {
-    if (!path && !this.defaultPath) {
-      throw new Error('no path provided and no default set');
-    }
+  getRecords() {
+
     const recordSubject = new Rx.Subject();
-    const filePath = path || this.defaultPath;
+    const filePath = this.config.csvPath;
 
     const parser = csv.parse({
       auto_parse: true,
@@ -63,11 +58,20 @@ class CSVReader {
       relax_column_count: true
     });
 
+    const buffer = [];
+
+    //on end just provide whatever is left
+    parser.on('end', function () {
+      recordSubject.next(buffer);
+    });
 
     parser.on('readable', () => {
       let data;
       while (data = parser.read()) {
-        recordSubject.next(data);
+        buffer.push(data);
+        if (buffer.length === this.config.chunkSize) {
+          recordSubject.next(buffer.splice(0, this.config.chunkSize));
+        }
       }
     });
 

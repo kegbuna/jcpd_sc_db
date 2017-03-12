@@ -49,9 +49,12 @@ In the `config` directory, place a file named `reader.json`. Example:
 ```json
     {
       "csvPath": "./migrator/data/jcpd_calls.csv",
-      "fileEncoding": "utf8"
+      "fileEncoding": "utf8",
+      "chunkSize": 100
     }
 ```
-The `csvPath` should point to the location of the exported CSV file
+`csvPath` should point to the location of the exported CSV file.
+
+`chunkSize` indicates how many records are to be retrieved at a time. At the end of the file it just returns what is left.
 ### Execute the script
 To start it up, run `node index.js` in the `migrator` directory.

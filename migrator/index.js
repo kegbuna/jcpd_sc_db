@@ -8,6 +8,6 @@ const dbWriter = new DBWriter(dbConfig);
 
 const serviceCallDBConfig = require('./models/service_call');
 
-csvReader.getRecords().subscribe((record) => {
-  dbWriter.writeRecord(serviceCallDBConfig, record);
+csvReader.getRecords().subscribe((records) => {
+  dbWriter.writeRecords(serviceCallDBConfig, records);
 });
