@@ -61,7 +61,7 @@ class CSVReader {
     const buffer = [];
 
     //on end just provide whatever is left
-    parser.on('end', function () {
+    parser.on('finish', function () {
       recordSubject.next(buffer);
     });
 
