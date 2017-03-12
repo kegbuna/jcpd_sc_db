@@ -11,3 +11,4 @@ migrator/data/*
 # ignore any configs
 migrator/config/*
 !migrator/config/.gitkeep
+/npm-debug.log
