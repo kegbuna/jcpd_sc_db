@@ -1,25 +1,32 @@
-CREATE TABLE public.service_calls (
-  event_number TEXT NOT NULL,
-  district TEXT,
-  time_received TIMESTAMP WITH TIME ZONE,
-  shift INTEGER,
-  time_dispatched TIMESTAMP WITH TIME ZONE,
-  time_arrived TIMESTAMP WITH TIME ZONE,
-  callcode TEXT,
-  call_code_description TEXT,
-  call_type TEXT,
-  priority INTEGER,
-  unit_id TEXT,
-  is_primary BOOLEAN,
-  address TEXT,
-  city TEXT,
-  latitude DOUBLE PRECISION,
-  longitude DOUBLE PRECISION,
-  geo_error TEXT,
-  geo_count INTEGER,
-  id INTEGER NOT NULL DEFAULT nextval('service_calls_id_seq'::regclass),
-  created TIMESTAMP WITH TIME ZONE,
-  updated TIMESTAMP WITH TIME ZONE
-);
-CREATE UNIQUE INDEX service_calls_id_uindex ON service_calls USING BTREE (id);
-COMMENT ON TABLE public.service_calls IS 'Call records for the JCPD';
+create table service_calls
+(
+	event_number text not null,
+	district text,
+	time_received timestamp with time zone,
+	shift integer,
+	time_dispatched timestamp with time zone,
+	time_arrived timestamp with time zone,
+	callcode text,
+	call_code_description text,
+	call_type text,
+	priority integer,
+	unit_id text,
+	is_primary boolean,
+	address text,
+	city text,
+	latitude double precision,
+	longitude double precision,
+	geo_error text,
+	geo_count integer,
+	created timestamp with time zone,
+	updated timestamp with time zone
+)
+;
+
+create unique index service_calls_event_number_unit_id_uindex
+	on service_calls (event_number, unit_id)
+;
+
+comment on table service_calls is 'Call records for the JCPD'
+;
+

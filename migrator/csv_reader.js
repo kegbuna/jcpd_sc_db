@@ -1,6 +1,11 @@
 const fs = require('fs');
 const Rx = require('rxjs/Rx');
 const csv = require('csv');
+const log4js = require('log4js');
+
+const toSnakeCase = require('lodash').snakeCase;
+
+const logger = log4js.getLogger('CSV Reader');
 
 /**
  * Reads in CSVs
@@ -15,14 +20,17 @@ class CSVReader {
    */
   constructor(config) {
     this.config = config || {};
+
     if (!config.csvPath) {
         throw new Error('Need a value for csvPath');
     }
+
+    logger.setLevel(this.config.logLevel || 'warn');
   }
 
   /**
    * Reads in a file and returns a dictionary with the results
-   * @returns {ReplaySubject<object>} An observable with the results of the file reading
+   * @returns {Subject<object>} An observable with the results of the file reading
    */
   getRecords() {
 
@@ -34,26 +42,26 @@ class CSVReader {
       // setting columns manually because the library is counting an empty column in the header
       // TODO:: Figure out why empty header is being parsed from records and restore dynamic column generation
       // Consider usage of 'columns' callback to clean the first row results
-      columns: [
-        "event_number",
-        "district",
-        "time_received",
-        "shift",
-        "time_dispatched",
-        "time_arrived",
-        "callcode",
-        "call_code_description",
-        "call_type",
-        "priority",
-        "unit_id",
-        "is_primary",
-        "address",
-        "city",
-        "latitude",
-        "longitude",
-        "geo_count",
-        "geo_error"
-      ],
+      /**
+       * Removes extra columns and
+       * @param {string[]} row
+       */
+      columns: function (row) {
+        //if the last column is empty just drop it
+        //there might be extra columns from a trailing comma
+        if (row[row.length - 1] === '') {
+          row.splice(row.length-1);
+        }
+
+        const result = row.map((value) => {
+          return toSnakeCase(value);
+        });
+
+        logger.debug(result);
+        logger.debug(`Using the following columns: ${result.join(', ')}`);
+
+        return result;
+      },
       from: 2,
       relax_column_count: true
     });
@@ -61,17 +69,14 @@ class CSVReader {
     const buffer = [];
 
     //on end just provide whatever is left
-    parser.on('finish', function () {
+    parser.on('end', function () {
       recordSubject.next(buffer);
     });
 
-    parser.on('readable', () => {
-      let data;
-      while (data = parser.read()) {
-        buffer.push(data);
-        if (buffer.length === this.config.chunkSize) {
-          recordSubject.next(buffer.splice(0, this.config.chunkSize));
-        }
+    parser.on('data', (chunk) => {
+      buffer.push(chunk);
+      if (buffer.length === this.config.chunkSize) {
+        recordSubject.next(buffer.splice(0, this.config.chunkSize));
       }
     });
 
@@ -84,6 +89,9 @@ class CSVReader {
 
     file.on('data', (chunk) => {
       parser.write(chunk);
+    });
+    file.on('end', () => {
+      recordSubject.next(buffer);
     });
 
     return recordSubject;

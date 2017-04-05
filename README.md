@@ -50,7 +50,8 @@ In the `config` directory, place a file named `reader.json`. Example:
     {
       "csvPath": "./migrator/data/jcpd_calls.csv",
       "fileEncoding": "utf8",
-      "chunkSize": 100
+      "chunkSize": 100,
+      "logLevel": "debug"
     }
 ```
 `csvPath` should point to the location of the exported CSV file.

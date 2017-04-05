@@ -9,24 +9,32 @@ const config = {
 };
 
 const model = {
-  "event_number": Sequelize.TEXT,
-  "district": Sequelize.TEXT,
-  "time_received": Sequelize.DATE,
-  "shift": Sequelize.INTEGER,
-  "time_dispatched": Sequelize.DATE,
-  "time_arrived": Sequelize.DATE,
-  "callcode": Sequelize.TEXT,
-  "call_code_description": Sequelize.TEXT,
-  "call_type": Sequelize.TEXT,
-  "priority": Sequelize.INTEGER,
-  "unit_id": Sequelize.TEXT,
-  "is_primary": Sequelize.BOOLEAN,
-  "address": Sequelize.TEXT,
-  "city": Sequelize.TEXT,
-  "latitude": Sequelize.FLOAT,
-  "longitude": Sequelize.FLOAT,
-  "geo_count": Sequelize.INTEGER,
-  "geo_error": Sequelize.TEXT
+  "event_number": {
+    type: Sequelize.DataTypes.TEXT,
+    primaryKey: true
+  },
+  "district": Sequelize.DataTypes.TEXT,
+  "time_received": Sequelize.DataTypes.DATE,
+  "shift": Sequelize.DataTypes.INTEGER,
+  "time_dispatched": Sequelize.DataTypes.DATE,
+  "time_arrived": {
+    type: Sequelize.DataTypes.DATE,
+  },
+  "callcode": Sequelize.DataTypes.TEXT,
+  "call_code_description": Sequelize.DataTypes.TEXT,
+  "call_type": Sequelize.DataTypes.TEXT,
+  "priority": Sequelize.DataTypes.INTEGER,
+  "unit_id": {
+    type: Sequelize.DataTypes.TEXT,
+    primaryKey: true
+  },
+  "is_primary": Sequelize.DataTypes.BOOLEAN,
+  "address": Sequelize.DataTypes.TEXT,
+  "city": Sequelize.DataTypes.TEXT,
+  "latitude": Sequelize.DataTypes.FLOAT,
+  "longitude": Sequelize.DataTypes.FLOAT,
+  "geo_count": Sequelize.DataTypes.INTEGER,
+  "geo_error": Sequelize.DataTypes.TEXT
 };
 
 module.exports = {tableName, config, model};
