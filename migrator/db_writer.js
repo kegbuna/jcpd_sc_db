@@ -9,10 +9,7 @@ class DBWriter {
       throw new Error('Need db configuration information');
     }
 
-    this.sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
-      host: dbConfig.host,
-      dialect: dbConfig.dialect
-    });
+    this.sequelize = new Sequelize(dbConfig);
 
     //collection of sequel models
     this.modelCache = {};
