@@ -19,7 +19,12 @@ create table service_calls
 	geo_error text,
 	geo_count integer,
 	created timestamp with time zone,
-	updated timestamp with time zone
+	updated timestamp with time zone,
+	new_column integer,
+	callcode_type text,
+	callcode_pd_code integer,
+	constraint service_calls_call_codes_type_pd_code_fk
+		foreign key (callcode_type, callcode_pd_code) references call_codes (type, pd_code)
 )
 ;
 
