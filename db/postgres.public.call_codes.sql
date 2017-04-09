@@ -1,8 +1,8 @@
 create table call_codes
 (
-	type text,
-	pd_code integer,
-	description text,
+	type text not null,
+	pd_code integer not null,
+	description text not null,
 	constraint call_codes_type_pd_code_pk
 		unique (type, pd_code)
 )
