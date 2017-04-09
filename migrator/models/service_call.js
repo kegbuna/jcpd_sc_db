@@ -22,6 +22,10 @@ const model = {
   },
   "callcode": {
     type: Sequelize.DataTypes.TEXT,
+    /**
+     * Parses the callcode to set the type and pd_code columns
+     * @param {string} val - The callcode property value
+     */
     set: function (val) {
       this.setDataValue('callcode', val);
       this.setDataValue('callcode_type', val[0]);
