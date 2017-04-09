@@ -20,7 +20,6 @@ create table service_calls
 	geo_count integer,
 	created timestamp with time zone,
 	updated timestamp with time zone,
-	new_column integer,
 	callcode_type text,
 	callcode_pd_code integer,
 	constraint service_calls_call_codes_type_pd_code_fk
@@ -30,6 +29,10 @@ create table service_calls
 
 create unique index service_calls_event_number_unit_id_uindex
 	on service_calls (event_number, unit_id)
+;
+
+create index service_calls_callcode_type_callcode_pd_code_index
+	on service_calls (callcode_type, callcode_pd_code)
 ;
 
 comment on table service_calls is 'Call records for the JCPD'
