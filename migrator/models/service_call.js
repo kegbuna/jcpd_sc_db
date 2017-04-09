@@ -20,7 +20,20 @@ const model = {
   "time_arrived": {
     type: Sequelize.DataTypes.DATE,
   },
-  "callcode": Sequelize.DataTypes.TEXT,
+  "callcode": {
+    type: Sequelize.DataTypes.TEXT,
+    set: function (val) {
+      this.setDataValue('callcode', val);
+      this.setDataValue('callcode_type', val[0]);
+      this.setDataValue('callcode_pd_code', val.substring(1, 3))
+    }
+  },
+  "callcode_type": {
+    type: Sequelize.DataTypes.TEXT
+  },
+  "callcode_pd_code": {
+    type: Sequelize.DataTypes.INTEGER
+  },
   "call_code_description": Sequelize.DataTypes.TEXT,
   "call_type": Sequelize.DataTypes.TEXT,
   "priority": Sequelize.DataTypes.INTEGER,
